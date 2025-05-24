@@ -2,87 +2,96 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Car Game</title>
-    <link rel="shortcut icon" href="favicon.ico?" type="image/x-icon">
-    <link rel="icon" href="favicon.ico?" type="image/x-icon">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css" />
-    <style>
-        @keyframes fadeIn {
-            0% { opacity: 0; }
-            100% { opacity: 1; }
-        }
-        .animated-text {
-            animation: fadeIn 2s forwards;
-            font-size: 2em;
-            font-weight: bold;
-            color: #fff;
-            margin-bottom: 20px;
-        }
-        .startScreen button {
-            background-color: #4CAF50;
-            border: none;
-            color: white;
-            padding: 15px 32px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin-top: 20px;
-            cursor: pointer;
-            border-radius: 8px;
-            transition: background-color 0.3s ease;
-        }
-        .startScreen button:hover {
-            background-color: #45a049;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Car Game</title>
+  <link rel="shortcut icon" href="favicon.ico?" type="image/x-icon" />
+  <link rel="icon" href="favicon.ico?" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+    .animated-text {
+      animation: fadeIn 2s forwards;
+      font-size: 2em;
+      font-weight: bold;
+      color: #fff;
+      margin-bottom: 20px;
+    }
+    .startScreen button {
+      background-color: #4caf50;
+      border: none;
+      color: white;
+      padding: 15px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin-top: 20px;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: background-color 0.3s ease;
+    }
+    .startScreen button:hover {
+      background-color: #45a049;
+    }
+  </style>
 </head>
 
-<body>
-    <div class="carGame">
-        <div class="score hide"></div>
-        <div class="startScreen">
-            <p class="animated-text">Shubham present Racing game</p>
-            <p>
-                Use arrow keys to move<br />
-                if you hit another car you will loss
-            </p>
-            <button class="startButton">Start</button>
-        </div>
-        <div class="gameArea"></div>
-        <div class="gameOverScreen hide">
-            <p>Game Over!</p>
-            <p>Your Score: <span id="finalScore">0</span></p>
-            <button class="restartButton">Play Again</button>
-        </div>
+<body onload="document.documentElement.requestFullscreen?.()">
+  <div class="carGame">
+    <div class="score hide"></div>
+    <div class="startScreen">
+      <p class="animated-text">Shubham present Racing game</p>
+      <p>
+        Use arrow keys to move<br />
+        if you hit another car you will loss
+      </p>
+      <button class="startButton">Start</button>
     </div>
+    <div class="gameArea"></div>
+    <div class="gameOverScreen hide">
+      <p>Game Over!</p>
+      <p>Your Score: <span id="finalScore">0</span></p>
+      <button class="restartButton">Play Again</button>
+    </div>
+  </div>
 
-    <script src="app.js"></script>
-    <script>
-        const startButton = document.querySelector('.startButton');
-        const startScreen = document.querySelector('.startScreen');
-        const gameOverScreen = document.querySelector('.gameOverScreen');
-        const restartButton = document.querySelector('.restartButton');
-        const finalScoreSpan = document.getElementById('finalScore');
+  <script src="app.js"></script>
+  <script>
+    const startButton = document.querySelector(".startButton");
+    const startScreen = document.querySelector(".startScreen");
+    const gameOverScreen = document.querySelector(".gameOverScreen");
+    const restartButton = document.querySelector(".restartButton");
+    const finalScoreSpan = document.getElementById("finalScore");
 
-        startButton.addEventListener('click', () => {
-            startScreen.classList.add('hide');
-            gameOverScreen.classList.add('hide');
-            startGame();
-        });
+    startButton.addEventListener("click", () => {
+      startScreen.classList.add("hide");
+      gameOverScreen.classList.add("hide");
+      startGame();
+    });
 
-        if (restartButton) {
-            restartButton.addEventListener('click', () => {
-                gameOverScreen.classList.add('hide');
-                startGame();
-            });
-        }
-    </script>
+    if (restartButton) {
+      restartButton.addEventListener("click", () => {
+        gameOverScreen.classList.add("hide");
+        startGame();
+      });
+    }
+  </script>
 </body>
+
 </html>
+
