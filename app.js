@@ -35,6 +35,7 @@ function gamePlay() {
     moveLines();
     moveEnemyCar(car);
 
+    // Car movement based on key presses or active touch controls
     if (keys.ArrowUp && player.y > road.top + 150) {
       player.y -= player.speed;
     }
@@ -151,41 +152,80 @@ function endGame() {
   startScreen.classList.remove("hide");
 }
 
+// Prevent default touch behavior for smoother game experience
 document.body.addEventListener("touchmove", function (e) {
   e.preventDefault();
 }, { passive: false });
 
-let touchStartX = 0;
-let touchStartY = 0;
+let touchIdentifier = null; // To track a single touch for continuous movement
 
 gameArea.addEventListener("touchstart", function (e) {
-  touchStartX = e.touches[0].clientX;
-  touchStartY = e.touches[0].clientY;
+  // Only handle the first touch if multiple touches occur
+  if (e.touches.length === 1) {
+    touchIdentifier = e.touches[0].identifier; // Store the identifier of the touch
+    handleTouchMove(e.touches[0]);
+  }
 }, false);
 
-gameArea.addEventListener("touchend", function (e) {
-  let touchEndX = e.changedTouches[0].clientX;
-  let touchEndY = e.changedTouches[0].clientY;
-
-  let diffX = touchEndX - touchStartX;
-  let diffY = touchEndY - touchStartY;
-
-  if (Math.abs(diffX) > Math.abs(diffY)) {
-    if (diffX > 20) {
-      keys.ArrowRight = true;
-      setTimeout(() => (keys.ArrowRight = false), 50);
-    } else if (diffX < -20) {
-      keys.ArrowLeft = true;
-      setTimeout(() => (keys.ArrowLeft = false), 50);
-    }
-  } else {
-    if (diffY > 20) {
-      keys.ArrowDown = true;
-      setTimeout(() => (keys.ArrowDown = false), 50);
-    } else if (diffY < -20) {
-      keys.ArrowUp = true;
-      setTimeout(() => (keys.ArrowUp = false), 50);
+gameArea.addEventListener("touchmove", function (e) {
+  // Find the touch that started the movement
+  for (let i = 0; i < e.changedTouches.length; i++) {
+    if (e.changedTouches[i].identifier === touchIdentifier) {
+      handleTouchMove(e.changedTouches[i]);
+      break;
     }
   }
 }, false);
+
+gameArea.addEventListener("touchend", function (e) {
+  // Reset all keys to false when touch ends
+  for (let i = 0; i < e.changedTouches.length; i++) {
+    if (e.changedTouches[i].identifier === touchIdentifier) {
+      keys.ArrowUp = false;
+      keys.ArrowDown = false;
+      keys.ArrowLeft = false;
+      keys.ArrowRight = false;
+      touchIdentifier = null; // Clear the touch identifier
+      break;
+    }
+  }
+}, false);
+
+function handleTouchMove(touch) {
+  let touchX = touch.clientX;
+  let touchY = touch.clientY;
+
+  let car = document.querySelector(".car");
+  let carRect = car.getBoundingClientRect();
+  let gameAreaRect = gameArea.getBoundingClientRect();
+
+  // Calculate the center of the car
+  let carCenterX = carRect.left + carRect.width / 2;
+  let carCenterY = carRect.top + carRect.height / 2;
+
+  // Determine movement based on touch position relative to the car's center
+  // Horizontal movement
+  if (touchX < carCenterX - 20) { // If touch is significantly to the left of the car
+    keys.ArrowLeft = true;
+    keys.ArrowRight = false;
+  } else if (touchX > carCenterX + 20) { // If touch is significantly to the right of the car
+    keys.ArrowRight = true;
+    keys.ArrowLeft = false;
+  } else { // If touch is horizontally aligned with the car, stop horizontal movement
+    keys.ArrowLeft = false;
+    keys.ArrowRight = false;
+  }
+
+  // Vertical movement
+  if (touchY < carCenterY - 20) { // If touch is significantly above the car
+    keys.ArrowUp = true;
+    keys.ArrowDown = false;
+  } else if (touchY > carCenterY + 20) { // If touch is significantly below the car
+    keys.ArrowDown = true;
+    keys.ArrowUp = false;
+  } else { // If touch is vertically aligned with the car, stop vertical movement
+    keys.ArrowUp = false;
+    keys.ArrowDown = false;
+  }
+}
 
