@@ -51,9 +51,8 @@ function gamePlay() {
     car.style.top = `${player.y}px`;
     car.style.left = `${player.x}px`;
 
-    player.score += 0.25;
-    player.speed = 3 + Math.floor(player.score / 100);
-
+    player.score += 0.1; // slower score
+    player.speed = 3 + Math.floor(player.score / 150); // slower speed growth
     score.innerHTML = "Score: " + Math.floor(player.score);
 
     window.requestAnimationFrame(gamePlay);
@@ -93,7 +92,7 @@ function moveEnemyCar(car) {
     if (enemyCar.y >= 750) {
       enemyCar.y = -300;
 
-      // 🎯 Targeted attack
+      // Targeted spawn
       let targetX = player.x + Math.floor(Math.random() * 100 - 50);
       targetX = Math.max(0, Math.min(targetX, gameArea.offsetWidth - 40));
       enemyCar.style.left = targetX + "px";
@@ -139,7 +138,6 @@ function startGame() {
     enemyCar.style.top = enemyCar.y + "px";
     enemyCar.style.backgroundImage = `url("./images/car${i + 1}.png")`;
 
-    // 🎯 Initial targeted spawn
     let targetX = player.x + Math.floor(Math.random() * 100 - 50);
     targetX = Math.max(0, Math.min(targetX, maxX));
     enemyCar.style.left = targetX + "px";
@@ -173,20 +171,20 @@ gameArea.addEventListener("touchend", function (e) {
   let diffY = touchEndY - touchStartY;
 
   if (Math.abs(diffX) > Math.abs(diffY)) {
-    if (diffX > 30) {
+    if (diffX > 20) {
       keys.ArrowRight = true;
-      setTimeout(() => (keys.ArrowRight = false), 100);
-    } else if (diffX < -30) {
+      setTimeout(() => (keys.ArrowRight = false), 50);
+    } else if (diffX < -20) {
       keys.ArrowLeft = true;
-      setTimeout(() => (keys.ArrowLeft = false), 100);
+      setTimeout(() => (keys.ArrowLeft = false), 50);
     }
   } else {
-    if (diffY > 30) {
+    if (diffY > 20) {
       keys.ArrowDown = true;
-      setTimeout(() => (keys.ArrowDown = false), 100);
-    } else if (diffY < -30) {
+      setTimeout(() => (keys.ArrowDown = false), 50);
+    } else if (diffY < -20) {
       keys.ArrowUp = true;
-      setTimeout(() => (keys.ArrowUp = false), 100);
+      setTimeout(() => (keys.ArrowUp = false), 50);
     }
   }
 }, false);
