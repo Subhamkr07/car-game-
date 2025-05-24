@@ -60,7 +60,7 @@ function gamePlay() {
 }
 function moveLines() {
     let lines = document.querySelectorAll(".line");
-    lines.forEach((line, index) => {
+    lines.forEach((line) => {
         if (line.y >= 700) {
             line.y -= 750;
         }
@@ -83,7 +83,7 @@ function isCollide(car, enemyCar) {
 
 function moveEnemyCar(car) {
     let enemyCars = document.querySelectorAll(".enemyCar");
-    enemyCars.forEach((enemyCar, index) => {
+    enemyCars.forEach((enemyCar) => {
         if (isCollide(car, enemyCar)) {
             endGame();
         }
@@ -137,3 +137,39 @@ function endGame() {
     player.start = false;
     startScreen.classList.remove("hide");
 }
+
+// 👇👇 Swipe Gesture for Touch Devices
+let touchStartX = 0;
+let touchStartY = 0;
+
+gameArea.addEventListener("touchstart", function (e) {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+}, false);
+
+gameArea.addEventListener("touchend", function (e) {
+    let touchEndX = e.changedTouches[0].clientX;
+    let touchEndY = e.changedTouches[0].clientY;
+
+    let diffX = touchEndX - touchStartX;
+    let diffY = touchEndY - touchStartY;
+
+    if (Math.abs(diffX) > Math.abs(diffY)) {
+        if (diffX > 30) {
+            keys.ArrowRight = true;
+            setTimeout(() => keys.ArrowRight = false, 100);
+        } else if (diffX < -30) {
+            keys.ArrowLeft = true;
+            setTimeout(() => keys.ArrowLeft = false, 100);
+        }
+    } else {
+        if (diffY > 30) {
+            keys.ArrowDown = true;
+            setTimeout(() => keys.ArrowDown = false, 100);
+        } else if (diffY < -30) {
+            keys.ArrowUp = true;
+            setTimeout(() => keys.ArrowUp = false, 100);
+        }
+    }
+}, false);
+

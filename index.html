@@ -13,20 +13,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css" />
     <style>
-        /* Add some basic animation for "Shubham present Racing game" */
         @keyframes fadeIn {
             0% { opacity: 0; }
             100% { opacity: 1; }
         }
         .animated-text {
             animation: fadeIn 2s forwards;
-            font-size: 2em; /* Adjust as needed */
+            font-size: 2em;
             font-weight: bold;
-            color: #fff; /* Example color */
+            color: #fff;
             margin-bottom: 20px;
         }
         .startScreen button {
-            background-color: #4CAF50; /* Green */
+            background-color: #4CAF50;
             border: none;
             color: white;
             padding: 15px 32px;
@@ -63,30 +62,27 @@
             <button class="restartButton">Play Again</button>
         </div>
     </div>
+
     <script src="app.js"></script>
     <script>
-        // DOM elements selection
         const startButton = document.querySelector('.startButton');
         const startScreen = document.querySelector('.startScreen');
-        const gameOverScreen = document.querySelector('.gameOverScreen'); // Added for game over screen
-        const restartButton = document.querySelector('.restartButton'); // Added for game over screen
-        const finalScoreSpan = document.getElementById('finalScore'); // Added for game over screen
+        const gameOverScreen = document.querySelector('.gameOverScreen');
+        const restartButton = document.querySelector('.restartButton');
+        const finalScoreSpan = document.getElementById('finalScore');
 
-        // Event listener for the Start button
         startButton.addEventListener('click', () => {
-            startScreen.classList.add('hide'); // Hide the start screen
-            gameOverScreen.classList.add('hide'); // Ensure game over screen is also hidden on start
-            startGame(); // Call the startGame function from app.js to begin the game
+            startScreen.classList.add('hide');
+            gameOverScreen.classList.add('hide');
+            startGame();
         });
 
-        // Event listener for the Play Again button (if it exists)
-        if (restartButton) { // Check if restartButton exists before adding listener
+        if (restartButton) {
             restartButton.addEventListener('click', () => {
-                gameOverScreen.classList.add('hide'); // Hide game over screen
-                startGame(); // Call startGame to reset and play again
+                gameOverScreen.classList.add('hide');
+                startGame();
             });
         }
     </script>
 </body>
-
 </html>
