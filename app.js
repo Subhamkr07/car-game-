@@ -6,7 +6,7 @@ document.addEventListener("keydown", keyDown);
 document.addEventListener("keyup", keyUp);
 
 let player = {
-  speed: 5,
+  speed: 3,
 };
 
 startScreen.addEventListener("click", startGame);
@@ -51,9 +51,10 @@ function gamePlay() {
     car.style.top = `${player.y}px`;
     car.style.left = `${player.x}px`;
 
-    player.score++;
-    player.speed = 5 + Math.floor(player.score / 100); // speed increases with score
-    score.innerHTML = "Score: " + player.score;
+    player.score += 0.25;
+    player.speed = 3 + Math.floor(player.score / 100);
+
+    score.innerHTML = "Score: " + Math.floor(player.score);
 
     window.requestAnimationFrame(gamePlay);
   }
@@ -91,8 +92,13 @@ function moveEnemyCar(car) {
 
     if (enemyCar.y >= 750) {
       enemyCar.y = -300;
-      enemyCar.style.left = Math.floor(Math.random() * 350) + "px";
+
+      // 🎯 Targeted attack
+      let targetX = player.x + Math.floor(Math.random() * 100 - 50);
+      targetX = Math.max(0, Math.min(targetX, gameArea.offsetWidth - 40));
+      enemyCar.style.left = targetX + "px";
     }
+
     enemyCar.y += player.speed;
     enemyCar.style.top = enemyCar.y + "px";
   });
@@ -105,7 +111,7 @@ function startGame() {
 
   player.start = true;
   player.score = 0;
-  player.speed = 5;
+  player.speed = 3;
   window.requestAnimationFrame(gamePlay);
 
   for (let i = 0; i < 5; i++) {
@@ -124,13 +130,20 @@ function startGame() {
   player.x = car.offsetLeft;
   player.y = car.offsetTop;
 
+  let maxX = gameArea.offsetWidth - 40;
+
   for (let i = 0; i < 3; i++) {
     let enemyCar = document.createElement("div");
     enemyCar.setAttribute("class", "enemyCar");
     enemyCar.y = (i + 1) * 350 * -1;
     enemyCar.style.top = enemyCar.y + "px";
     enemyCar.style.backgroundImage = `url("./images/car${i + 1}.png")`;
-    enemyCar.style.left = Math.floor(Math.random() * 350) + "px";
+
+    // 🎯 Initial targeted spawn
+    let targetX = player.x + Math.floor(Math.random() * 100 - 50);
+    targetX = Math.max(0, Math.min(targetX, maxX));
+    enemyCar.style.left = targetX + "px";
+
     gameArea.appendChild(enemyCar);
   }
 }
@@ -140,55 +153,41 @@ function endGame() {
   startScreen.classList.remove("hide");
 }
 
-// Prevent scrolling on touch
-document.body.addEventListener(
-  "touchmove",
-  function (e) {
-    e.preventDefault();
-  },
-  { passive: false }
-);
+document.body.addEventListener("touchmove", function (e) {
+  e.preventDefault();
+}, { passive: false });
 
-// Mobile swipe controls
 let touchStartX = 0;
 let touchStartY = 0;
 
-gameArea.addEventListener(
-  "touchstart",
-  function (e) {
-    touchStartX = e.touches[0].clientX;
-    touchStartY = e.touches[0].clientY;
-  },
-  false
-);
+gameArea.addEventListener("touchstart", function (e) {
+  touchStartX = e.touches[0].clientX;
+  touchStartY = e.touches[0].clientY;
+}, false);
 
-gameArea.addEventListener(
-  "touchend",
-  function (e) {
-    let touchEndX = e.changedTouches[0].clientX;
-    let touchEndY = e.changedTouches[0].clientY;
+gameArea.addEventListener("touchend", function (e) {
+  let touchEndX = e.changedTouches[0].clientX;
+  let touchEndY = e.changedTouches[0].clientY;
 
-    let diffX = touchEndX - touchStartX;
-    let diffY = touchEndY - touchStartY;
+  let diffX = touchEndX - touchStartX;
+  let diffY = touchEndY - touchStartY;
 
-    if (Math.abs(diffX) > Math.abs(diffY)) {
-      if (diffX > 30) {
-        keys.ArrowRight = true;
-        setTimeout(() => (keys.ArrowRight = false), 100);
-      } else if (diffX < -30) {
-        keys.ArrowLeft = true;
-        setTimeout(() => (keys.ArrowLeft = false), 100);
-      }
-    } else {
-      if (diffY > 30) {
-        keys.ArrowDown = true;
-        setTimeout(() => (keys.ArrowDown = false), 100);
-      } else if (diffY < -30) {
-        keys.ArrowUp = true;
-        setTimeout(() => (keys.ArrowUp = false), 100);
-      }
+  if (Math.abs(diffX) > Math.abs(diffY)) {
+    if (diffX > 30) {
+      keys.ArrowRight = true;
+      setTimeout(() => (keys.ArrowRight = false), 100);
+    } else if (diffX < -30) {
+      keys.ArrowLeft = true;
+      setTimeout(() => (keys.ArrowLeft = false), 100);
     }
-  },
-  false
-);
+  } else {
+    if (diffY > 30) {
+      keys.ArrowDown = true;
+      setTimeout(() => (keys.ArrowDown = false), 100);
+    } else if (diffY < -30) {
+      keys.ArrowUp = true;
+      setTimeout(() => (keys.ArrowUp = false), 100);
+    }
+  }
+}, false);
 
