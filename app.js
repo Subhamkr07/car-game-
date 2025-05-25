@@ -252,3 +252,80 @@ gameArea.addEventListener("touchend", function (e) {
   }
 }, false);
 
+
+// Splash Animation Logic
+document.addEventListener('DOMContentLoaded', () => {
+  const logoSplash = document.getElementById('logo-splash');
+  const logoImg = logoSplash.querySelector('img');
+  const carGameElement = document.querySelector('.carGame'); // Get the game container
+
+  const introText = document.createElement('div');
+  introText.id = 'intro-text';
+  introText.textContent = 'Prepare to Enter a New World';
+  logoSplash.appendChild(introText);
+
+  const loadingText = document.createElement('div');
+  loadingText.id = 'loading-text';
+  loadingText.textContent = 'Loading';
+  logoSplash.appendChild(loadingText);
+
+  introText.classList.add('animate-in');
+  loadingText.style.opacity = '1';
+
+  let dotCount = 0;
+  const maxDots = 3;
+  const loadingInterval = setInterval(() => {
+    dotCount = (dotCount % (maxDots + 1));
+    const dots = '.'.repeat(dotCount);
+    loadingText.textContent = 'Loading' + dots;
+    dotCount++;
+  }, 300);
+
+  const loadingPhaseDuration = 2500; // Duration for loading text and crack effect start
+
+  setTimeout(() => {
+    clearInterval(loadingInterval);
+    loadingText.classList.add('fade-out');
+
+    // Introduce crack effect from the center of the logo after a slight delay
+    setTimeout(() => {
+      const crackEffect = document.createElement('div');
+      crackEffect.classList.add('crack-effect');
+      logoSplash.appendChild(crackEffect);
+
+      // Position the crack effect to originate from the center of the logo
+      // This is handled by CSS (left: 50%; top: 50%; transform: translate(-50%, -50%))
+      crackEffect.style.opacity = '1';
+
+      // Logo appears and scales
+      setTimeout(() => {
+        logoImg.style.opacity = '1';
+        logoImg.style.transform = 'scale(1)';
+
+        // Logo stays on screen for 3.5 seconds after appearing fully
+        setTimeout(() => {
+            // Text parts animate out
+            const words = introText.textContent.split(' ');
+            const middle = Math.ceil(words.length / 2);
+            introText.innerHTML = `<span class="intro-text-part part-left">${words.slice(0, middle).join(' ')}</span><span class="intro-text-part part-right">${words.slice(middle).join(' ')}</span>`;
+
+            const partLeft = introText.querySelector('.part-left');
+            const partRight = introText.querySelector('.part-right');
+            partLeft.style.transform = 'translateX(-150vw)';
+            partRight.style.transform = 'translateX(150vw)';
+            partLeft.style.opacity = '0';
+            partRight.style.opacity = '0';
+
+            // Fade out the entire splash screen
+            setTimeout(() => {
+                logoSplash.style.opacity = '0';
+                setTimeout(() => {
+                    logoSplash.style.display = 'none';
+                    carGameElement.classList.remove('hide-initial'); // Show the game
+                }, 1000); // Duration of the fade-out transition
+            }, 1200); // Delay before fading out after text parts animate out
+        }, 3500); // Logo stays for 3.5 seconds
+      }, 300); // Delay for logo to start appearing after crack
+    }, 500); // Delay before crack effect starts
+  }, loadingPhaseDuration);
+});
